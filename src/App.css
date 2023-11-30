@@ -3,7 +3,7 @@
 }
 
 .header {
-    background-image: linear-gradient(rgba(0, 0, 0, .7), rgba(0, 0, 0, .7));
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("./Images/PublicImages/image-2.jpg");
     opacity: var(--mainOpacity);
     height: 25rem !important;
 }
@@ -36,6 +36,12 @@
 .lost-image {
     background-image: url("./Images/PublicImages/image-3.jpg");
     width: 720px;
+}
+
+.homepage-carousel-title {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .block-div {
