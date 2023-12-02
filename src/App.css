@@ -23,6 +23,9 @@
 
 .col-image-right, .col-image-left, .lost-image {
     height: 25rem !important;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
 .col-image-left {
