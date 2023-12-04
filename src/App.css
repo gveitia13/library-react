@@ -1,5 +1,6 @@
 :root {
     --mainOpacity: rgba(0, 0, 0, .55);
+    --mainColor: #0e76a8;
 }
 
 .header {
