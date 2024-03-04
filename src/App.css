@@ -18,7 +18,7 @@
     height: 100%;
 }
 
-.main-color {
+.main-color, .main-color:hover, .main-color:focus {
     background-color: #0e76a8;
 }
 

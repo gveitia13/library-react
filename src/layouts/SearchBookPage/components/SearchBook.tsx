@@ -25,7 +25,7 @@ export const SearchBook: React.FC<{ book: BookModel }> = (props) => {
           </div>
         </div>
         <div className="col-md-3 d-flex justify-content-center align-items-center">
-          <a href="#" className='btn main-color text-white'>View Details</a>
+          <a href="#" className='btn main-color btn-primary text-white'>View Details</a>
         </div>
       </div>
     </div>
