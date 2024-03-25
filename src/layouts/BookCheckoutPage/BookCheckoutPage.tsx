@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import BookModel from "../../models/BookModel";
-import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import {SpinnerLoading} from "../Utils/SpinnerLoading";
+import {StarsReview} from "../Utils/StarsReview";
+import {CheckoutAndReviewBox} from "./CheckoutAndReviewBox";
 
 export const BookCheckoutPage = () => {
   const [book, setBook] = useState<BookModel>();
@@ -42,7 +44,7 @@ export const BookCheckoutPage = () => {
   }, []);
 
   if (isLoading) {
-    return <SpinnerLoading />;
+    return <SpinnerLoading/>;
   }
 
   if (httpError) {
@@ -58,7 +60,7 @@ export const BookCheckoutPage = () => {
         <div className="row mt-5">
           <div className="col-sm-2 col-md-2">
             {book?.img ? (
-              <img src={book?.img} width={226} height={349} alt="Book" />
+              <img src={book?.img} width={226} height={349} alt="Book"/>
             ) : (
               <img
                 src={require("./../../Images/BooksImages/book-1.jpeg")}
@@ -73,15 +75,17 @@ export const BookCheckoutPage = () => {
               <h2>{book?.title}</h2>
               <h5 className="text-primary">{book?.author}</h5>
               <p className="lead">{book?.description}</p>
+              <StarsReview rating={4} size={32}/>
             </div>
           </div>
+          <CheckoutAndReviewBox book={book} mobile={false}/>
         </div>
-        <hr />
+        <hr/>
       </div>
       <div className="container d-lg-none mt-5">
         <div className="d-flex justify-content-center align-items-center">
           {book?.img ? (
-            <img src={book?.img} width={226} height={349} alt="Book" />
+            <img src={book?.img} width={226} height={349} alt="Book"/>
           ) : (
             <img
               src={require("./../../Images/BooksImages/book-1.jpeg")}
@@ -96,9 +100,11 @@ export const BookCheckoutPage = () => {
             <h2>{book?.title}</h2>
             <h5 className="text-primary">{book?.author}</h5>
             <p className="lead">{book?.description}</p>
+            <StarsReview rating={4} size={32}/>
           </div>
         </div>
-        <hr />
+        <CheckoutAndReviewBox book={book} mobile={true}/>
+        <hr/>
       </div>
     </div>
   );
