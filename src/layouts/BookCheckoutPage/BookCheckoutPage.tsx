@@ -1,13 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
-import {SpinnerLoading} from "../Utils/SpinnerLoading";
-import {StarsReview} from "../Utils/StarsReview";
-import {CheckoutAndReviewBox} from "./CheckoutAndReviewBox";
+import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { StarsReview } from "../Utils/StarsReview";
+import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
+import ReviewModel from "../../models/ReviewModel";
+import { error } from "console";
 
 export const BookCheckoutPage = () => {
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
+
+  // Review State
+  const [reviews, setReviews] = useState<ReviewModel[]>([]);
+  const [totalStars, setTotalStars] = useState(0);
+  const [isLoadingReview, setIsLoadingReview] = useState(true);
 
   const bookId = window.location.pathname.split("/")[2];
 
@@ -43,8 +50,54 @@ export const BookCheckoutPage = () => {
     });
   }, []);
 
-  if (isLoading) {
-    return <SpinnerLoading/>;
+  useEffect(() => {
+    const fetchBookReviews = async () => {
+      const reviewUrl = `http://localhost:7000/api/reviews/search/findByBookId=${bookId}`;
+
+      const responseReviews = await fetch(reviewUrl);
+
+      if (!responseReviews.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const responseJsonReviews = await responseReviews.json();
+
+      const responseData = responseJsonReviews._embedded.reviews;
+
+      const loadedReviews: ReviewModel[] = [];
+
+      let weightStarReviews = 0;
+
+      for (const key in responseData) {
+        loadedReviews.push({
+          id: responseData[key].id,
+          userEmail: responseData[key].userEmail,
+          date: responseData[key].date,
+          rating: responseData[key].rating,
+          book_id: responseData[key].bookId,
+          reviewDescription: responseData[key].reviewDescription,
+        });
+        weightStarReviews = weightStarReviews + responseData[key].rating;
+      }
+
+      if (loadedReviews) {
+        const round = (
+          Math.round((weightStarReviews / loadedReviews.length) * 2) / 2
+        ).toFixed(1);
+        setTotalStars(Number(round));
+      }
+      setReviews(loadedReviews);
+      setIsLoadingReview(false);
+    };
+
+    fetchBookReviews().catch((error: any) => {
+      setIsLoadingReview(false);
+      setHttpError(error.message);
+    });
+  }, []);
+
+  if (isLoading || isLoadingReview) {
+    return <SpinnerLoading />;
   }
 
   if (httpError) {
@@ -60,7 +113,7 @@ export const BookCheckoutPage = () => {
         <div className="row mt-5">
           <div className="col-sm-2 col-md-2">
             {book?.img ? (
-              <img src={book?.img} width={226} height={349} alt="Book"/>
+              <img src={book?.img} width={226} height={349} alt="Book" />
             ) : (
               <img
                 src={require("./../../Images/BooksImages/book-1.jpeg")}
@@ -75,17 +128,17 @@ export const BookCheckoutPage = () => {
               <h2>{book?.title}</h2>
               <h5 className="text-primary">{book?.author}</h5>
               <p className="lead">{book?.description}</p>
-              <StarsReview rating={4} size={32}/>
+              <StarsReview rating={4} size={32} />
             </div>
           </div>
-          <CheckoutAndReviewBox book={book} mobile={false}/>
+          <CheckoutAndReviewBox book={book} mobile={false} />
         </div>
-        <hr/>
+        <hr />
       </div>
       <div className="container d-lg-none mt-5">
         <div className="d-flex justify-content-center align-items-center">
           {book?.img ? (
-            <img src={book?.img} width={226} height={349} alt="Book"/>
+            <img src={book?.img} width={226} height={349} alt="Book" />
           ) : (
             <img
               src={require("./../../Images/BooksImages/book-1.jpeg")}
@@ -100,11 +153,11 @@ export const BookCheckoutPage = () => {
             <h2>{book?.title}</h2>
             <h5 className="text-primary">{book?.author}</h5>
             <p className="lead">{book?.description}</p>
-            <StarsReview rating={4} size={32}/>
+            <StarsReview rating={4} size={32} />
           </div>
         </div>
-        <CheckoutAndReviewBox book={book} mobile={true}/>
-        <hr/>
+        <CheckoutAndReviewBox book={book} mobile={true} />
+        <hr />
       </div>
     </div>
   );
